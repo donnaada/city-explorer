@@ -8,16 +8,16 @@ import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
 
 
+
 class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {
       cityData: [],
       city: '',
-      lon: '',
-      lat: '',
-      imgUrl: '#',
-      letsExplore: false
+      mapApi: '',
+      letsExplore: false,
+      error: false
     }
   }
 
@@ -28,34 +28,36 @@ class Main extends Component {
     })
   }
 
-  /**
-   * 
-   * Region 1: US 
-   * GET https://us1.locationiq.com/v1/search?key=YOUR_ACCESS_TOKEN&q=SEARCH_STRING&format=json
-   * 
-   * Region 2: Europe 
-   * GET https://eu1.locationiq.com/v1/search?key=YOUR_ACCESS_TOKEN&q=SEARCH_STRING&format=json
-   * 
-  */
-
   getCityData = async (e) => {
     e.preventDefault();
     try {
       let apiKey = process.env.REACT_APP_LOCATIONIQ_API_KEY
+
       let api = `https://us1.locationiq.com/v1/search?key=${apiKey}&q=${this.state.city}&format=json`;
-      let cityData = await axios.get(api);
+      let cityData = await axios.get(api); 
+
+      let mapApi = `https://maps.locationiq.com/v3/staticmap?key=${apiKey}&center=${cityData.data[0].lat},${cityData.data[0].lon}&zoom=12&size=500x500&format=png&markers=icon:small-blue-cutout|${cityData.data[0].lat},${cityData.data[0].lon}`
+
+
+//<img src='https://maps.locationiq.com/v3/staticmap?key=<YOUR_ACCESS_TOKEN>&center=<latitude>,<longitude>&zoom=<zoom>&size=<width>x<height>&format=<format>&maptype=<MapType>&markers=icon:<icon>|<latitude>,<longitude>&markers=icon:<icon>|<latitude>,<longitude>'>
 
       this.setState({
         cityData: cityData.data[0],
-        lon: cityData.data[0].lon,
-        lat: cityData.data[0].lat,
         cityName: cityData.data[0].display_name,
         letsExplore: true,
-        imgUrl: `<img src='https://maps.locationiq.com/v3/staticmap?key=${apiKey}&center=${this.state.lat},=${this.state.lon}&zoom=>15&size=<width>x<height>&format=<format>&maptype=<MapType>&markers=icon:<icon>|<latitude>,<longitude>&markers=icon:<icon>|<latitude>,<longitude>'>`
+        mapApi: mapApi,
+        error: false
       });
+      console.log(this.state.map);
+      // Longitude: -122.330062
 
+      // Latitude: 47.6038321
 
     } catch (error) {
+      this.setState({
+        error: true,
+        errorMsg: error.message
+      });
 
     };
   }
@@ -64,28 +66,29 @@ class Main extends Component {
   render() {
     return (
       <>
-        <Container>
-          <Form onSubmit={this.getCityData}>
+        <Container className='my-5'>
+          <Form className='mb-5' onSubmit={this.getCityData}>
 
             <InputGroup>
               <Form.Control type="text" placeholder="Where do you want to explore?" onInput={this.handleInput} />
               <Button onClick={this.getCityData}>Explore!</Button>
             </InputGroup>
           </Form>
-        </Container>
-        <Container>
-          <Card>
-            <Card.Header>
-              <h2 className='fs-3'>{!this.state.letsExplore ? 'Adventure Awaits' : this.state.cityName}</h2 >
-            </Card.Header>
-            <Card.Body>
-              <p className='fs-5'>Longitude: {this.state.lon}</p>
-              <p className='fs-5'>Latitude: {this.state.lat}</p>
-            </Card.Body>
-          </Card>
-          <div>
-            <Image src={this.state.imgUrl}></Image>
-          </div>
+       
+              <Card>
+                <Card.Header>
+                  <h2 className='fs-3'>{!this.state.letsExplore ? 'Adventure Awaits🗺️!' : this.state.cityName}</h2 >
+                </Card.Header>
+                <div className="d-flex flex-row">
+                  <Card.Body>
+                    <p className='fs-5'>Longitude: {this.state.cityData.lon}</p>
+                    <p className='fs-5'>Latitude: {this.state.cityData.lat}</p>
+                  </Card.Body>
+                  <Image src={this.state.mapApi} ></Image>
+                </div>
+                  {this.state.error && <p>{this.state.errorMsg}</p>}
+
+              </Card>
         </Container >
       </>
     );
