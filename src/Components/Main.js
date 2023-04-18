@@ -5,6 +5,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
+import Image from 'react-bootstrap/Image';
 
 
 class Main extends Component {
@@ -15,6 +16,7 @@ class Main extends Component {
       city: '',
       lon: '',
       lat: '',
+      imgUrl: '#',
       letsExplore: false
     }
   }
@@ -39,7 +41,8 @@ class Main extends Component {
   getCityData = async (e) => {
     e.preventDefault();
     try {
-      let api = `https://us1.locationiq.com/v1/search?key=${process.env.REACT_APP_LOCATIONIQ_API_KEY}&q=${this.state.city}&format=json`;
+      let apiKey = process.env.REACT_APP_LOCATIONIQ_API_KEY
+      let api = `https://us1.locationiq.com/v1/search?key=${apiKey}&q=${this.state.city}&format=json`;
       let cityData = await axios.get(api);
 
       this.setState({
@@ -47,11 +50,10 @@ class Main extends Component {
         lon: cityData.data[0].lon,
         lat: cityData.data[0].lat,
         cityName: cityData.data[0].display_name,
-        letsExplore: true
+        letsExplore: true,
+        imgUrl: `<img src='https://maps.locationiq.com/v3/staticmap?key=${apiKey}&center=${this.state.lat},=${this.state.lon}&zoom=>15&size=<width>x<height>&format=<format>&maptype=<MapType>&markers=icon:<icon>|<latitude>,<longitude>&markers=icon:<icon>|<latitude>,<longitude>'>`
       });
 
-      console.log(cityData.data[0]);
-      console.log(cityData.data[0].lon);
 
     } catch (error) {
 
@@ -81,6 +83,9 @@ class Main extends Component {
               <p className='fs-5'>Latitude: {this.state.lat}</p>
             </Card.Body>
           </Card>
+          <div>
+            <Image src={this.state.imgUrl}></Image>
+          </div>
         </Container >
       </>
     );
