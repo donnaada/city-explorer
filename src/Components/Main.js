@@ -14,9 +14,7 @@ class Main extends Component {
     this.state = {
       cityData: [],
       city: '',
-      lon: '',
-      lat: '',
-      imgUrl: '#',
+      mapApi: '',
       letsExplore: false
     }
   }
@@ -28,32 +26,29 @@ class Main extends Component {
     })
   }
 
-  /**
-   * 
-   * Region 1: US 
-   * GET https://us1.locationiq.com/v1/search?key=YOUR_ACCESS_TOKEN&q=SEARCH_STRING&format=json
-   * 
-   * Region 2: Europe 
-   * GET https://eu1.locationiq.com/v1/search?key=YOUR_ACCESS_TOKEN&q=SEARCH_STRING&format=json
-   * 
-  */
-
   getCityData = async (e) => {
     e.preventDefault();
     try {
       let apiKey = process.env.REACT_APP_LOCATIONIQ_API_KEY
+
       let api = `https://us1.locationiq.com/v1/search?key=${apiKey}&q=${this.state.city}&format=json`;
-      let cityData = await axios.get(api);
+      let cityData = await axios.get(api); 
+
+      let mapApi = `https://maps.locationiq.com/v3/staticmap?key=${apiKey}&center=${cityData.data[0].lat},${cityData.data[0].lon}&zoom=12&size=500x500&format=png&markers=icon:small-blue-cutout|${cityData.data[0].lat},${cityData.data[0].lon}`
+
+
+//<img src='https://maps.locationiq.com/v3/staticmap?key=<YOUR_ACCESS_TOKEN>&center=<latitude>,<longitude>&zoom=<zoom>&size=<width>x<height>&format=<format>&maptype=<MapType>&markers=icon:<icon>|<latitude>,<longitude>&markers=icon:<icon>|<latitude>,<longitude>'>
 
       this.setState({
         cityData: cityData.data[0],
-        lon: cityData.data[0].lon,
-        lat: cityData.data[0].lat,
         cityName: cityData.data[0].display_name,
         letsExplore: true,
-        imgUrl: `<img src='https://maps.locationiq.com/v3/staticmap?key=${apiKey}&center=${this.state.lat},=${this.state.lon}&zoom=>15&size=<width>x<height>&format=<format>&maptype=<MapType>&markers=icon:<icon>|<latitude>,<longitude>&markers=icon:<icon>|<latitude>,<longitude>'>`
+        mapApi: mapApi
       });
+      console.log(this.state.map);
+      // Longitude: -122.330062
 
+      // Latitude: 47.6038321
 
     } catch (error) {
 
@@ -79,12 +74,12 @@ class Main extends Component {
               <h2 className='fs-3'>{!this.state.letsExplore ? 'Adventure Awaits' : this.state.cityName}</h2 >
             </Card.Header>
             <Card.Body>
-              <p className='fs-5'>Longitude: {this.state.lon}</p>
-              <p className='fs-5'>Latitude: {this.state.lat}</p>
+              <p className='fs-5'>Longitude: {this.state.cityData.lon}</p>
+              <p className='fs-5'>Latitude: {this.state.cityData.lat}</p>
             </Card.Body>
           </Card>
           <div>
-            <Image src={this.state.imgUrl}></Image>
+            <Image src={this.state.mapApi}></Image>
           </div>
         </Container >
       </>
