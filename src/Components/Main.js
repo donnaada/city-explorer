@@ -8,6 +8,7 @@ import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
 
 
+
 class Main extends Component {
   constructor(props) {
     super(props);
@@ -15,7 +16,8 @@ class Main extends Component {
       cityData: [],
       city: '',
       mapApi: '',
-      letsExplore: false
+      letsExplore: false,
+      error: false
     }
   }
 
@@ -43,7 +45,8 @@ class Main extends Component {
         cityData: cityData.data[0],
         cityName: cityData.data[0].display_name,
         letsExplore: true,
-        mapApi: mapApi
+        mapApi: mapApi,
+        error: false
       });
       console.log(this.state.map);
       // Longitude: -122.330062
@@ -51,6 +54,10 @@ class Main extends Component {
       // Latitude: 47.6038321
 
     } catch (error) {
+      this.setState({
+        error: true,
+        errorMsg: error.message
+      });
 
     };
   }
@@ -59,28 +66,29 @@ class Main extends Component {
   render() {
     return (
       <>
-        <Container>
-          <Form onSubmit={this.getCityData}>
+        <Container className='my-5'>
+          <Form className='mb-5' onSubmit={this.getCityData}>
 
             <InputGroup>
               <Form.Control type="text" placeholder="Where do you want to explore?" onInput={this.handleInput} />
               <Button onClick={this.getCityData}>Explore!</Button>
             </InputGroup>
           </Form>
-        </Container>
-        <Container>
-          <Card>
-            <Card.Header>
-              <h2 className='fs-3'>{!this.state.letsExplore ? 'Adventure Awaits' : this.state.cityName}</h2 >
-            </Card.Header>
-            <Card.Body>
-              <p className='fs-5'>Longitude: {this.state.cityData.lon}</p>
-              <p className='fs-5'>Latitude: {this.state.cityData.lat}</p>
-            </Card.Body>
-          </Card>
-          <div>
-            <Image src={this.state.mapApi}></Image>
-          </div>
+       
+              <Card>
+                <Card.Header>
+                  <h2 className='fs-3'>{!this.state.letsExplore ? 'Adventure Awaits🗺️!' : this.state.cityName}</h2 >
+                </Card.Header>
+                <div className="d-flex flex-row">
+                  <Card.Body>
+                    <p className='fs-5'>Longitude: {this.state.cityData.lon}</p>
+                    <p className='fs-5'>Latitude: {this.state.cityData.lat}</p>
+                  </Card.Body>
+                  <Image src={this.state.mapApi} ></Image>
+                </div>
+                  {this.state.error && <p>{this.state.errorMsg}</p>}
+
+              </Card>
         </Container >
       </>
     );
