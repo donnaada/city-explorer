@@ -31,12 +31,13 @@ class Main extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      let weatherAPI = `${process.env.REACT_APP_SERVER}/weather?searchQuery=${this.state.city}`
+      let weatherAPI = `${process.env.REACT_APP_SERVER}/weather?searchQuery=Paris`
       let weatherData = await axios.get(weatherAPI)
 
       this.setState({
-        weatherData
+        weatherData: weatherData.data
       })
+      console.log(weatherData.data);
 
     } catch (error) {
       console.log(error.message)
@@ -88,6 +89,7 @@ class Main extends Component {
             <InputGroup>
               <Form.Control type="text" placeholder="Where do you want to explore?" onInput={this.handleInput} />
               <Button onClick={this.getCityData}>Explore!</Button>
+              <Button onClick={this.handleSubmit}>weather!</Button>
             </InputGroup>
           </Form>
 
