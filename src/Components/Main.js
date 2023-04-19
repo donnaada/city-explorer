@@ -14,6 +14,7 @@ class Main extends Component {
       mapApi: '',
       letsExplore: false,
       weatherData:[],
+      hasWeather: false,
       forecast:[],
       error: false,
       errorMessage: ''
@@ -37,11 +38,9 @@ class Main extends Component {
 
       let mapApi = `https://maps.locationiq.com/v3/staticmap?key=${apiKey}&center=${cityData.data[0].lat},${cityData.data[0].lon}&zoom=10&size=250x250&format=png&markers=icon:small-blue-cutout|${cityData.data[0].lat},${cityData.data[0].lon}`
       
-      let weatherAPI = `${process.env.REACT_APP_SERVER}/weather?lat=${cityData.data[0].lat}&lon=${cityData.data[0].lon}`
+    
 
-      let weatherData = await axios.get(weatherAPI)
-
-      // this.getWeatherData();
+      this.getWeatherData(cityData.data[0].lat,cityData.data[0].lon);
 
 
       
@@ -51,18 +50,18 @@ class Main extends Component {
         cityName: cityData.data[0].display_name,
         letsExplore: true,
         mapApi: mapApi,
-        error: false,
-        forecastData: weatherData.data
+        error: false,     
+        // forecastData: weatherData.data
       });
 
 
       // this.setState({
-      //   weatherData: weatherData.data
+      //   weatherData: weatherDat a.data
       // })
 
       console.log(cityData.data[0].lon);
       console.log(cityData.data[0].lat);
-      console.log(weatherData.data);
+      // console.log(weatherData.data);
 
 
     } catch (error) {
@@ -80,22 +79,26 @@ class Main extends Component {
     };
   }
 
-  getWeatherData = async (e) => {
-    e.preventDefault();
+  getWeatherData = async (lat, lon) => {
     try {
       // let weatherAPI = `${process.env.REACT_APP_SERVER}/weather?searchQuery=${this.state.cityName}&lat=${this.state.lat}&lon=${this.state.lon}`
 
-      let weatherAPI = `${process.env.REACT_APP_SERVER}/weather?lat=${this.state.cityData.lat}&lon=${this.state.cityData.lon}`
+      let weatherAPI = `${process.env.REACT_APP_SERVER}/weather?lat=${lat}&lon=${lon}`
 
       let weatherData = await axios.get(weatherAPI)
 
       this.setState({
-        forecast: weatherData.data
+        hasWeather: true,
+        forecastData: weatherData.data
       })
       console.log(weatherData.data);
 
     } catch (error) {
-      console.log(error.message)
+        console.log(error.message)
+
+        this.setState({
+          hasWeather: false,
+        })
     }
 
   }
@@ -108,7 +111,9 @@ class Main extends Component {
           <InputForm  onFormSubmit={this.getCityData} onCityInput={this.handleInput} />
           <CityCard 
             letsExplore={this.state.letsExplore} 
+            hasWeather={this.state.hasWeather} 
             cityName={this.state.cityName} 
+            city={this.state.city} 
             longitude={this.state.cityData.lon}
             latitude={this.state.cityData.lat}
             mapApi={this.state.mapApi}
