@@ -28,18 +28,34 @@ class Main extends Component {
     })
   }
 
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      let weatherAPI = `${process.env.REACT_APP_SERVER}/weather?searchQuery=${this.state.city}`
+      let weatherData = await axios.get(weatherAPI)
+
+      this.setState({
+        weatherData
+      })
+
+    } catch (error) {
+      console.log(error.message)
+    }
+
+  }
+
   getCityData = async (e) => {
     e.preventDefault();
     try {
       let apiKey = process.env.REACT_APP_LOCATIONIQ_API_KEY
 
       let api = `https://us1.locationiq.com/v1/search?key=${apiKey}&q=${this.state.city}&format=json`;
-      let cityData = await axios.get(api); 
+      let cityData = await axios.get(api);
 
       let mapApi = `https://maps.locationiq.com/v3/staticmap?key=${apiKey}&center=${cityData.data[0].lat},${cityData.data[0].lon}&zoom=12&size=500x500&format=png&markers=icon:small-blue-cutout|${cityData.data[0].lat},${cityData.data[0].lon}`
 
 
-//<img src='https://maps.locationiq.com/v3/staticmap?key=<YOUR_ACCESS_TOKEN>&center=<latitude>,<longitude>&zoom=<zoom>&size=<width>x<height>&format=<format>&maptype=<MapType>&markers=icon:<icon>|<latitude>,<longitude>&markers=icon:<icon>|<latitude>,<longitude>'>
+      //<img src='https://maps.locationiq.com/v3/staticmap?key=<YOUR_ACCESS_TOKEN>&center=<latitude>,<longitude>&zoom=<zoom>&size=<width>x<height>&format=<format>&maptype=<MapType>&markers=icon:<icon>|<latitude>,<longitude>&markers=icon:<icon>|<latitude>,<longitude>'>
 
       this.setState({
         cityData: cityData.data[0],
@@ -74,21 +90,21 @@ class Main extends Component {
               <Button onClick={this.getCityData}>Explore!</Button>
             </InputGroup>
           </Form>
-       
-              <Card>
-                <Card.Header>
-                  <h2 className='fs-3'>{!this.state.letsExplore ? 'Adventure Awaits🗺️!' : this.state.cityName}</h2 >
-                </Card.Header>
-                <div className="d-flex flex-row">
-                  <Card.Body>
-                    <p className='fs-5'>Longitude: {this.state.cityData.lon}</p>
-                    <p className='fs-5'>Latitude: {this.state.cityData.lat}</p>
-                  </Card.Body>
-                  <Image src={this.state.mapApi} ></Image>
-                </div>
-                  {this.state.error && <p>{this.state.errorMsg}</p>}
 
-              </Card>
+          <Card>
+            <Card.Header>
+              <h2 className='fs-3'>{!this.state.letsExplore ? 'Adventure Awaits🗺️!' : this.state.cityName}</h2 >
+            </Card.Header>
+            <div className="d-flex flex-row">
+              <Card.Body>
+                <p className='fs-5'>Longitude: {this.state.cityData.lon}</p>
+                <p className='fs-5'>Latitude: {this.state.cityData.lat}</p>
+              </Card.Body>
+              <Image src={this.state.mapApi} ></Image>
+            </div>
+            {this.state.error && <p>{this.state.errorMsg}</p>}
+
+          </Card>
         </Container >
       </>
     );
