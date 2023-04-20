@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Card, CardGroup, Row, Col } from 'react-bootstrap';
+import { Container, Card, CardGroup, Col } from 'react-bootstrap';
 
 class WeatherForecast extends Component {
   render() { 
