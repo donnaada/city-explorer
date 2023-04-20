@@ -91,7 +91,7 @@ class Main extends Component {
         hasWeather: true,
         forecastData: weatherData.data
       })
-      console.log(weatherData.data);
+      console.log(this.state.forecastData);
 
     } catch (error) {
         console.log(error.message)
@@ -121,7 +121,6 @@ class Main extends Component {
             errorMessage={this.state.errorMessage}
             forecastData={this.state.forecastData}
           />
-          {/* <WeatherForecast forecastData={this.state.forecastData} /> */}
         </Container >
       </>
     );
