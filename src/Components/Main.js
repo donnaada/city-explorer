@@ -3,6 +3,7 @@ import axios from 'axios';
 import Container from 'react-bootstrap/Container';
 import InputForm from './InputForm';
 import CityCard from './Card';
+import Movies from './Movies';
 
 
 class Main extends Component {
@@ -15,9 +16,10 @@ class Main extends Component {
       letsExplore: false,
       weatherData:[],
       hasWeather: false,
-      forecast:[],
+      forecastData:[],
       error: false,
-      errorMessage: ''
+      errorMessage: '',
+      movieData: []
     }
   }
 
@@ -38,13 +40,6 @@ class Main extends Component {
 
       let mapApi = `https://maps.locationiq.com/v3/staticmap?key=${apiKey}&center=${cityData.data[0].lat},${cityData.data[0].lon}&zoom=10&size=250x250&format=png&markers=icon:small-blue-cutout|${cityData.data[0].lat},${cityData.data[0].lon}`
       
-    
-
-      this.getWeatherData(cityData.data[0].lat,cityData.data[0].lon);
-
-
-      
-
       this.setState({
         cityData: cityData.data[0],
         cityName: cityData.data[0].display_name,
@@ -54,15 +49,8 @@ class Main extends Component {
         // forecastData: weatherData.data
       });
 
-
-      // this.setState({
-      //   weatherData: weatherDat a.data
-      // })
-
-      console.log(cityData.data[0].lon);
-      console.log(cityData.data[0].lat);
-      // console.log(weatherData.data);
-
+      this.getWeatherData(cityData.data[0].lat,cityData.data[0].lon);
+      this.getMovieData(this.state.city);
 
     } catch (error) {
       this.setState({
@@ -72,35 +60,50 @@ class Main extends Component {
         letsExplore: false,
         weatherData:[],
         forecastData:[],
+        movieData:[],
         error: true,
         errorMessage: error.message
       });
-
     };
   }
 
   getWeatherData = async (lat, lon) => {
     try {
-      // let weatherAPI = `${process.env.REACT_APP_SERVER}/weather?searchQuery=${this.state.cityName}&lat=${this.state.lat}&lon=${this.state.lon}`
-
-      let weatherAPI = `${process.env.REACT_APP_SERVER}/weather?lat=${lat}&lon=${lon}`
-
+      let weatherAPI = `${process.env.REACT_APP_SERVER}/weather?lat=${lat}&lon=${lon}`;
       let weatherData = await axios.get(weatherAPI)
 
       this.setState({
         hasWeather: true,
         forecastData: weatherData.data
       })
-      console.log(this.state.forecastData);
 
     } catch (error) {
         console.log(error.message)
 
         this.setState({
+          errorMessage: error.message,
           hasWeather: false,
         })
     }
 
+  }
+
+  getMovieData = async (city) =>{
+    try {
+      let movieAPI = `${process.env.REACT_APP_SERVER}/movies?city=${city}`;
+      let movieData = await axios.get(movieAPI);
+      console.log('>>>',movieData.data)
+
+      this.setState({
+        getMovies: movieData.data
+      })
+
+
+    } catch (error) {
+      this.setState({
+        errorMessage: error.message
+      })
+    }
   }
 
 
@@ -120,7 +123,9 @@ class Main extends Component {
             error={this.state.error}
             errorMessage={this.state.errorMessage}
             forecastData={this.state.forecastData}
+            
           />
+          <Movies getMovies={this.state.getMovies} />
         </Container >
       </>
     );

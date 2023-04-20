@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Card, CardGroup } from 'react-bootstrap';
+import { Container, Card, CardGroup, Row, Col } from 'react-bootstrap';
 
 class WeatherForecast extends Component {
   render() { 
@@ -8,12 +8,14 @@ class WeatherForecast extends Component {
     if (this.props.forecastData) {
       forecastElements = this.props.forecastData.map((forecast) => {
         // return <p key={forecast.date}>{forecast.date}: {forecast.description}</p>;
-            return <Card>
-              <Card.Header><h4 className='fs-5'>{forecast.date}</h4></Card.Header>
-              <Card.Body>
-                Looks like were expecting <span className='fst-italic fw-semibold d-block'>{forecast.description}!</span>
-              </Card.Body>
-            </Card>
+            return <Col xs={6} md={3}>
+              <Card>
+                <Card.Header><h4 className='fs-5'>{forecast.date}</h4></Card.Header>
+                <Card.Body>
+                  Looks like were expecting <span className='fst-italic fw-semibold d-block'>{forecast.description}!</span>
+                </Card.Body>
+              </Card>
+            </Col>
       });
     }
 
