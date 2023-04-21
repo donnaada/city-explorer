@@ -5,10 +5,8 @@ import Movie from './IndividualMovie';
 class Movies extends Component {
   render() { 
     let movieElements = this.props.getMovies.map((movie)=>{
-      let imgSrc=`https://image.tmdb.org/t/p/w500/${movie.imgUrl}`;
-      let altText = `${movie.title} movie poster`
       return(
-        <Movie title={movie.title} imgSrc={imgSrc} altText={altText} />
+        <Movie title={movie.title} imgSrc={movie.imgUrl} />
       )
     })
 
