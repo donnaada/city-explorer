@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { CardGroup, Container, Row } from 'react-bootstrap';
-import Movie from './IndividualMovie';
+import Movie from './Movie';
 
 class Movies extends Component {
   render() { 
