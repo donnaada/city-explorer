@@ -3,7 +3,6 @@ import axios from 'axios';
 import Container from 'react-bootstrap/Container';
 import InputForm from './InputForm';
 import CityCard from './Card';
-import Movies from './Movies';
 
 
 class Main extends Component {
@@ -123,9 +122,8 @@ class Main extends Component {
             error={this.state.error}
             errorMessage={this.state.errorMessage}
             forecastData={this.state.forecastData}
-            
+            getMovies={this.state.getMovies}
           />
-          <Movies getMovies={this.state.getMovies} />
         </Container >
       </>
     );
