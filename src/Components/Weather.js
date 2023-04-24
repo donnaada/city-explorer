@@ -17,7 +17,7 @@ class WeatherForecast extends Component {
       <Container>
         <details className='m-2 text-start'>
           <summary className='fs-3'>Weather Forecast </summary>
-          <small>Forecast last updated on {this.props.weatherLastUpdated}</small>
+          <small>Forecast last updated on {this.props.weatherlastUpdated}</small>
           <CardGroup className='d-flex flex-wrap flex-grow-1 justify-content-start p-3'>
             {weatherList}
           </CardGroup>
