@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Card, Col } from 'react-bootstrap';
 
 class WeatherDay extends Component {
-  state = {  } 
   render() { 
     return (
       <>
