@@ -43,3 +43,8 @@ Site's Backend hosted on [Render](https://render.com/)
 4/19/2023 12:18am - Application now connected to Weatherbit via backend API and will display weather from Weatherbit API.
 
 4/18/2023 7:30pm - Application now able to display map of city entered by user on front end. App also deployed via Netlify.
+
+## Web Request Response Cycle (WRRC)
+
+![Web Request Response Cycle Diagram](./public/wrrc1.png)
+![Web Request Response Cycle Diagram](./public/wrrc2.png)
