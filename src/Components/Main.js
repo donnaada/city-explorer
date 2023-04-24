@@ -18,7 +18,9 @@ class Main extends Component {
       forecastData:[],
       error: false,
       errorMessage: '',
-      movieData: []
+      movieData: [],
+      weatherlastUpdated: '',
+      movielastUpdated:''
     }
   }
 
@@ -61,7 +63,9 @@ class Main extends Component {
         forecastData:[],
         movieData:[],
         error: true,
-        errorMessage: error.message
+        errorMessage: error.message,
+        weatherlastUpdated: '',
+        movielastUpdated:''
       });
     };
   }
@@ -70,11 +74,18 @@ class Main extends Component {
     try {
       let weatherAPI = `${process.env.REACT_APP_SERVER}/weather?lat=${lat}&lon=${lon}`;
       let weatherData = await axios.get(weatherAPI)
+      console.log('>>> weather .data',weatherData.data[0])
+      console.log('>>> weather .timestamp',weatherData.data[1])
+      // console.log('>>> timestamp',weatherData.data.timestamp)
+
 
       this.setState({
         hasWeather: true,
-        forecastData: weatherData.data
+        forecastData: weatherData.data[0],
+        weatherlastUpdated: weatherData.data[1]
       })
+
+      // console.log(this.state.forecastData)
 
     } catch (error) {
         console.log(error.message)
@@ -91,10 +102,12 @@ class Main extends Component {
     try {
       let movieAPI = `${process.env.REACT_APP_SERVER}/movies?city=${city}`;
       let movieData = await axios.get(movieAPI);
-      console.log('>>>',movieData.data)
+      console.log('>>> movie .data',movieData.data[0])
+      console.log('>>> movie .timestamp',movieData.data[1])
 
       this.setState({
-        getMovies: movieData.data
+        getMovies: movieData.data[0],
+        movielastUpdated: movieData.data[1]
       })
 
 
@@ -123,6 +136,8 @@ class Main extends Component {
             errorMessage={this.state.errorMessage}
             forecastData={this.state.forecastData}
             getMovies={this.state.getMovies}
+            movielastUpdated={this.state.movielastUpdated}
+            weatherlastUpdated={this.state.weatherlastUpdated}
           />
         </Container >
       </>

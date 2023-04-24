@@ -21,9 +21,9 @@ class CityCard extends Component {
           <Image src={this.props.mapApi} fluid></Image>
         </Col>
         </Card.Body>
-          <div>{this.props.hasWeather ? <WeatherForecast forecastData={this.props.forecastData}/> : <h5 className='text-capitalize'>Loading weather for {this.props.cityName.split(',')[0]}...</h5>}</div>
+          <div>{this.props.forecastData ? <WeatherForecast weatherlastUpdated={this.props.weatherlastUpdated} forecastData={this.props.forecastData}/> : <h5 className='text-capitalize text-start'>Loading weather for {this.props.cityName.split(',')[0]}...</h5>}</div>
 
-          <div>{this.props.hasWeather ? <Movies getMovies={this.props.getMovies}/> : <h5 className='text-capitalize'>Loading Movies for {this.props.cityName.split(',')[0]}...</h5>}</div>
+          <div>{this.props.getMovies ? <Movies movielastUpdated={this.props.movielastUpdated} getMovies={this.props.getMovies}/> : <h5 className='text-capitalize text-start'>Loading Movies for {this.props.cityName.split(',')[0]}...</h5>}</div>
           </>}
       {this.props.error && <Card.Footer className='text-danger'>{this.props.errorMessage}</Card.Footer>}
     </Card>
